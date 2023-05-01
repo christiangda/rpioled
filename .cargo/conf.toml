@@ -1,7 +1,10 @@
-[[bin]]
-name = "daemon"
-path = "src/daemon/main.rs"
+[build]
+name = "arm-linux-gnueabihf-gcc"
 
-[[bin]]
-name = "client"
-path = "src/client/main.rs"
+# Pi 0/1
+[target.arm-unknown-linux-gnueabihf]
+linker = "arm-linux-gnueabihf-gcc"
+
+# Pi 2/3/4
+[target.armv7-unknown-linux-gnueabihf]
+linker = "arm-linux-gnueabihf-gcc"
