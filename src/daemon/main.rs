@@ -1,4 +1,4 @@
-use sysinfo::{NetworkExt, System, SystemExt};
+use sysinfo::{Components, Disks, Networks, System};
 
 fn main() {
     // Please note that we use "new_all" to ensure that all list of
@@ -9,29 +9,6 @@ fn main() {
     // First we update all information of our `System` struct.
     sys.refresh_all();
 
-    // We display all disks' information:
-    println!("=> disks:");
-    for disk in sys.disks() {
-        println!("{:?}", disk);
-    }
-
-    // Network interfaces name, data received and data transmitted:
-    println!("=> networks:");
-    for (interface_name, data) in sys.networks() {
-        println!(
-            "{}: {}/{} B",
-            interface_name,
-            data.received(),
-            data.transmitted()
-        );
-    }
-
-    // Components temperature:
-    println!("=> components:");
-    for component in sys.components() {
-        println!("{:?}", component);
-    }
-
     println!("=> system:");
     // RAM and swap information:
     println!("total memory: {} bytes", sys.total_memory());
@@ -40,11 +17,36 @@ fn main() {
     println!("used swap   : {} bytes", sys.used_swap());
 
     // Display system information:
-    println!("System name:             {:?}", sys.name());
-    println!("System kernel version:   {:?}", sys.kernel_version());
-    println!("System OS version:       {:?}", sys.os_version());
-    println!("System host name:        {:?}", sys.host_name());
+    println!("System name:             {:?}", System::name());
+    println!("System kernel version:   {:?}", System::kernel_version());
+    println!("System OS version:       {:?}", System::os_version());
+    println!("System host name:        {:?}", System::host_name());
 
     // Number of CPUs:
     println!("NB CPUs: {}", sys.cpus().len());
+
+    // We display all disks' information:
+    println!("=> disks:");
+    let disks = Disks::new_with_refreshed_list();
+    for disk in &disks {
+        println!("{disk:?}");
+    }
+
+    // Components temperature:
+    let components = Components::new_with_refreshed_list();
+    println!("=> components:");
+    for component in &components {
+        println!("{component:?}");
+    }
+
+    // Network interfaces name, data received and data transmitted:
+    let networks = Networks::new_with_refreshed_list();
+    println!("=> networks:");
+    for (interface_name, data) in &networks {
+        println!(
+            "{interface_name}: {}/{} B",
+            data.received(),
+            data.transmitted()
+        );
+    }
 }
